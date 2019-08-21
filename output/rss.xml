@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tony's Data Science Blog</title><link>https://example.com/</link><description>Technical Blog | Data Science Portfolio | Career Learnings</description><atom:link href="https://example.com/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><copyright>Contents © 2019 &lt;a href="mailto:tonytongwa@gmail.com"&gt;Tony Tong Tsz Hin&lt;/a&gt; </copyright><lastBuildDate>Wed, 21 Aug 2019 15:19:29 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>test</title><link>https://example.com/posts/test/</link><dc:creator>Tony Tong Tsz Hin</dc:creator><description>&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tony's Data Science Blog</title><link>https://s0yabean.github.io</link><description>Technical Blog | Data Science Portfolio | Career Learnings</description><atom:link href="https://s0yabean.github.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><copyright>Contents © 2019 &lt;a href="mailto:tonytongwa@gmail.com"&gt;Tony Tong Tsz Hin&lt;/a&gt; </copyright><lastBuildDate>Wed, 21 Aug 2019 15:51:19 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>GovTech X NUS Capstone - Open sourcing a PII tool</title><link>https://s0yabean.github.io/posts/govtech-x-nus-capstone-open-sourcing-a-pii-tool/</link><dc:creator>Tony Tong Tsz Hin</dc:creator><description>&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;Write your post here.&lt;/p&gt;
 
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;/div&gt;</description><guid>https://example.com/posts/test/</guid><pubDate>Wed, 21 Aug 2019 15:19:11 GMT</pubDate></item></channel></rss>
+&lt;/div&gt;</description><guid>https://s0yabean.github.io/posts/govtech-x-nus-capstone-open-sourcing-a-pii-tool/</guid><pubDate>Wed, 21 Aug 2019 15:51:16 GMT</pubDate></item><item><title>Uncovering Soccer Player Traits Using Clustering Algorithms (FIFA 2018-2019 Data)</title><link>https://s0yabean.github.io/posts/uncovering-soccer-player-traits-using-clustering-algorithms-fifa-2018-2019-data/</link><dc:creator>Tony Tong Tsz Hin</dc:creator><description>&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;Write your post here.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description><guid>https://s0yabean.github.io/posts/uncovering-soccer-player-traits-using-clustering-algorithms-fifa-2018-2019-data/</guid><pubDate>Wed, 21 Aug 2019 15:49:56 GMT</pubDate></item><item><title>Going Full-Stack - Building a gamified CRM web app</title><link>https://s0yabean.github.io/posts/going-full-stack-building-a-gamified-crm-web-app/</link><dc:creator>Tony Tong Tsz Hin</dc:creator><description>&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;Write your post here.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description><guid>https://s0yabean.github.io/posts/going-full-stack-building-a-gamified-crm-web-app/</guid><pubDate>Wed, 21 Aug 2019 15:49:03 GMT</pubDate></item></channel></rss>
