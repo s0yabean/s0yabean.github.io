@@ -2,10 +2,4047 @@
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Write your post here.</p>
+<h1 id="Title:-Uncovering-Soccer-Personas-Using-Clustering-Algorithms">Title: Uncovering Soccer Personas Using Clustering Algorithms<a class="anchor-link" href="#Title:-Uncovering-Soccer-Personas-Using-Clustering-Algorithms">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Introduction-(What-Is-Clustering?)">Introduction (What Is Clustering?)<a class="anchor-link" href="#Introduction-(What-Is-Clustering?)">&#182;</a></h1><p>In the realms of machine learning, a very common delineation is between:</p>
+<ul>
+<li>supervised learning </li>
+<li>unsupervised learning</li>
+</ul>
+<p>The key difference is whether a target variable of interest is available. In other words, is there something for the training data to predict and compare with?</p>
+<p>If not, it typically is an unsupervised learning problem, where we seek to unravel the "hidden" target variable using techniques that attempt to group similar data together.</p>
+<h4 id="During-past-data-science-work,-I-have-led-and-implemented-2-technical-projects-related-to-clustering-in-different-industries,-which-has-deepened-my-appreciation-for-this-problem-space.">During past data science work, I have led and implemented 2 technical projects related to clustering in different industries, which has deepened my appreciation for this problem space.<a class="anchor-link" href="#During-past-data-science-work,-I-have-led-and-implemented-2-technical-projects-related-to-clustering-in-different-industries,-which-has-deepened-my-appreciation-for-this-problem-space.">&#182;</a></h4><p>Usually, businesses would like to cluster commercial data for various purposes, such as discovering customer profiles to create mental models of their customers.</p>
+<p>The commercial work I did revolved around clustering consumers to rank them for targeted marketing campaigns and customer support, and the applications are plenty.</p>
+<p>However I wanted to switch it up and doing something fun while transferring my tacit knowledge, so I decided to work on soccer.</p>
+<p>I'm an avid soccer player - one of my biggest sporting achievements was winning the under 10 7-a-side National Championships in Singapore where I scored the winning goal.</p>
+<p>I never really reached that peak again even in my teens, but I've always grew strong domain expertise through futsal sessions and watching top European leagues - I supported Manchester United until Rooney left!</p>
+<h5 id="Hence,-I-wanted-to-take-this-opportunity-to-cluster-a-bunch-of-player-data-and-build-a-soccer-player-recommender-using-clustering-techniques.">Hence, I wanted to take this opportunity to cluster a bunch of player data and build a soccer player recommender using clustering techniques.<a class="anchor-link" href="#Hence,-I-wanted-to-take-this-opportunity-to-cluster-a-bunch-of-player-data-and-build-a-soccer-player-recommender-using-clustering-techniques.">&#182;</a></h5>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<!-- TEASER_END -->
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="What-Is-The-Goal?">What Is The Goal?<a class="anchor-link" href="#What-Is-The-Goal?">&#182;</a></h1><p>In the big leagues, teams are constantly in flux:</p>
+<ul>
+<li>Players are bought and sold (2019 EPL transfer window value was £1.41bn)</li>
+<li>Players get injured or ill (Average injuries per team in EPL 16/17 season was 57.5. The maximum team size is 25)</li>
+<li>Player's mentality/ form/ physical performance changes over time </li>
+</ul>
+<p>However, coaches aspire to have consistent performances as much as possible, pertaining to a specific style or end-result.</p>
+<p>Top teams have a distinct style - Jurgen Klopp is known for his ‘Gegenpressing’. The EPL is known for being physical and direct, emanating the swashbuckling style of the English. How about the "Tiki-Taka" philosophy made famous by Pep Guardiola?</p>
+<p>Coaches work with scouts to identify new players with similar profiles to their current squad.</p>
+<p>This prepares them for ready substitutions - in case for sudden injuries, downtime or other reasons that leave a gaping hole in their formations, they still have someone to play a specific role in the team.</p>
+<p>Hence, I will be building a tool for coaches and scouts that would recommend similar players outside their current squad to them, so they can acquire the right "replacements" for their desired roles, whoever the player is.</p>
+<p>Statistics: <br>
+<a href="https://talksport.com/football/572055/every-premier-league-club-spent-summer-transfer-window-2019-2020/">https://talksport.com/football/572055/every-premier-league-club-spent-summer-transfer-window-2019-2020/</a> <br>
+<a href="https://www.physioroom.com/info/english-premier-league-injury-analysis-201617-season/">https://www.physioroom.com/info/english-premier-league-injury-analysis-201617-season/</a></p>
 
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="What-Are-We-Working-With?">What Are We Working With?<a class="anchor-link" href="#What-Are-We-Working-With?">&#182;</a></h1><p>We will be collecting soccer data from a variety of sources, including:</p>
+<ul>
+<li>Kaggle 2018 FIFA &amp; 2019 FIFA Player Ratings</li>
+<li>Kaggle European Soccer Database (2007-2016)</li>
+<li>Sofifa API Package</li>
+</ul>
+<p>Get player hashtags from the api tool <a href="http://sofifa-api.herokuapp.com/api/v1/players/">http://sofifa-api.herokuapp.com/api/v1/players/</a> (no need to timebox)
+SQL lite table data from the European Data dataset # <a href="https://www.kaggle.com/hugomathien/soccer">https://www.kaggle.com/hugomathien/soccer</a>
+18/19 dataset from Kaggle</p>
+<p>There are over 15k players in the top european leagues, with quantitative ratings (used in the video game) that serve as a proxy for their performances.</p>
+<p>There are also more qualitative ratings such as hashtags and social media popularity from other data mining efforts out there.</p>
+<p>In essence, majority of the data will come from sofifa, and the rest would come from social media.</p>
+<p>Most of the analysis I've seen on player data online tends to be static, in other words restricted to a particular timestamp or year.</p>
+<h4 id="We-can-do-better,-since-we-know-at-any-1-time,-players-are-in-different-periods-of-their-career.">We can do better, since we know at any 1 time, players are in different periods of their career.<a class="anchor-link" href="#We-can-do-better,-since-we-know-at-any-1-time,-players-are-in-different-periods-of-their-career.">&#182;</a></h4><p>As player ratings have been recorded since 2007 to 2019, there is the opportunity to include some form of time-series analysis here, to factor changes in player performance, or changes in their positions or playing styles as they age.</p>
+<p>During the pre-processing step, I will clean the data until all the feature variables of interest are all represented in 1 row.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[74]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Data-Engineering-(Importing-Data-From-Kaggle)">Data Engineering (Importing Data From Kaggle)<a class="anchor-link" href="#Data-Engineering-(Importing-Data-From-Kaggle)">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[415]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fifa_18</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/Users/tonytonggg/Desktop/datasets/fifa_clustering/fifa_data_18.csv&#39;</span><span class="p">)</span>
+<span class="n">fifa_19</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/Users/tonytonggg/Desktop/datasets/fifa_clustering/fifa_data_19.csv&#39;</span><span class="p">)</span>
+<span class="n">euro_db</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/Users/tonytonggg/Desktop/datasets/fifa_clustering/european_database.csv&#39;</span><span class="p">)</span>
+<span class="n">mapi_db</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/Users/tonytonggg/Desktop/datasets/fifa_clustering/scraped_player_data.csv&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[106]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># data seems to be ~2018 as deduced from the player ages, as though scraped from a statics database.</span>
+<span class="c1"># key columns from this dataset are the player hashtags, traits - however no joint column with the other 3 datasets</span>
+<span class="c1"># , need to create a simple match algorithm</span>
+<span class="c1"># images of the players could be used to make a fancy visualisation chart from tensorboard</span>
+<span class="n">mapi_db</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/Users/tonytonggg/Desktop/datasets/fifa_clustering/scraped_player_data.csv&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[107]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">mapi_db</span><span class="p">)</span> <span class="c1"># 18k rows but across 10 years (2007-2016). There would be missing data.</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[107]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>18054</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="1st-Round-of-Data-Cleaning-(Removing-Uneccessary-Columns,-Renaming-Columns-etc)">1st Round of Data Cleaning (Removing Uneccessary Columns, Renaming Columns etc)<a class="anchor-link" href="#1st-Round-of-Data-Cleaning-(Removing-Uneccessary-Columns,-Renaming-Columns-etc)">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[374]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># removing columns not of direct interest</span>
+<span class="n">fifa_18</span> <span class="o">=</span> <span class="n">fifa_18</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Unnamed: 0&#39;</span><span class="p">,</span> <span class="s1">&#39;Club Logo&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">,</span> <span class="s1">&#39;Wage&#39;</span><span class="p">,</span> <span class="s1">&#39;Club&#39;</span><span class="p">,</span> <span class="s1">&#39;Flag&#39;</span><span class="p">])</span>
+<span class="n">fifa_19</span> <span class="o">=</span> <span class="n">fifa_19</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Unnamed: 0&#39;</span><span class="p">,</span> <span class="s1">&#39;Club Logo&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">,</span> <span class="s1">&#39;Wage&#39;</span><span class="p">,</span> <span class="s1">&#39;Club&#39;</span><span class="p">,</span> <span class="s1">&#39;Flag&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;Release Clause&#39;</span><span class="p">,</span> <span class="s1">&#39;Jersey Number&#39;</span><span class="p">,</span> <span class="s1">&#39;Joined&#39;</span><span class="p">,</span> <span class="s1">&#39;Loaned From&#39;</span><span class="p">,</span> <span class="s1">&#39;Contract Valid Until&#39;</span><span class="p">,</span> <span class="s1">&#39;Real Face&#39;</span><span class="p">])</span>
+
+<span class="c1"># renaming some columns to fit with fifa_19</span>
+<span class="n">fifa_18</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">,</span> <span class="s1">&#39;Age&#39;</span><span class="p">,</span> <span class="s1">&#39;Photo&#39;</span><span class="p">,</span> <span class="s1">&#39;Nationality&#39;</span><span class="p">,</span> <span class="s1">&#39;Overall&#39;</span><span class="p">,</span> <span class="s1">&#39;Potential&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;Special&#39;</span><span class="p">,</span> <span class="s1">&#39;Acceleration&#39;</span><span class="p">,</span> <span class="s1">&#39;Aggression&#39;</span><span class="p">,</span> <span class="s1">&#39;Agility&#39;</span><span class="p">,</span> <span class="s1">&#39;Balance&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;BallControl&#39;</span><span class="p">,</span> <span class="s1">&#39;Composure&#39;</span><span class="p">,</span> <span class="s1">&#39;Crossing&#39;</span><span class="p">,</span> <span class="s1">&#39;Curve&#39;</span><span class="p">,</span> <span class="s1">&#39;Dribbling&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;Finishing&#39;</span><span class="p">,</span> <span class="s1">&#39;FKAccuracy&#39;</span><span class="p">,</span> <span class="s1">&#39;GKDiving&#39;</span><span class="p">,</span> <span class="s1">&#39;GKHandling&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;GKKicking&#39;</span><span class="p">,</span> <span class="s1">&#39;GKPositioning&#39;</span><span class="p">,</span> <span class="s1">&#39;GKReflexes&#39;</span><span class="p">,</span> <span class="s1">&#39;HeadingAccuracy&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;Interceptions&#39;</span><span class="p">,</span> <span class="s1">&#39;Jumping&#39;</span><span class="p">,</span> <span class="s1">&#39;LongPassing&#39;</span><span class="p">,</span> <span class="s1">&#39;LongShots&#39;</span><span class="p">,</span> <span class="s1">&#39;Marking&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;Penalties&#39;</span><span class="p">,</span> <span class="s1">&#39;Positioning&#39;</span><span class="p">,</span> <span class="s1">&#39;Reactions&#39;</span><span class="p">,</span> <span class="s1">&#39;ShortPassing&#39;</span><span class="p">,</span> <span class="s1">&#39;ShotPower&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;SlidingTackle&#39;</span><span class="p">,</span> <span class="s1">&#39;SprintSpeed&#39;</span><span class="p">,</span> <span class="s1">&#39;Stamina&#39;</span><span class="p">,</span> <span class="s1">&#39;StandingTackle&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;Strength&#39;</span><span class="p">,</span> <span class="s1">&#39;Vision&#39;</span><span class="p">,</span> <span class="s1">&#39;Volleys&#39;</span><span class="p">,</span> <span class="s1">&#39;CAM&#39;</span><span class="p">,</span> <span class="s1">&#39;CB&#39;</span><span class="p">,</span> <span class="s1">&#39;CDM&#39;</span><span class="p">,</span> <span class="s1">&#39;CF&#39;</span><span class="p">,</span> <span class="s1">&#39;CM&#39;</span><span class="p">,</span> <span class="s1">&#39;ID&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;LAM&#39;</span><span class="p">,</span> <span class="s1">&#39;LB&#39;</span><span class="p">,</span> <span class="s1">&#39;LCB&#39;</span><span class="p">,</span> <span class="s1">&#39;LCM&#39;</span><span class="p">,</span> <span class="s1">&#39;LDM&#39;</span><span class="p">,</span> <span class="s1">&#39;LF&#39;</span><span class="p">,</span> <span class="s1">&#39;LM&#39;</span><span class="p">,</span> <span class="s1">&#39;LS&#39;</span><span class="p">,</span> <span class="s1">&#39;LW&#39;</span><span class="p">,</span> <span class="s1">&#39;LWB&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;Preferred Positions&#39;</span><span class="p">,</span> <span class="s1">&#39;RAM&#39;</span><span class="p">,</span> <span class="s1">&#39;RB&#39;</span><span class="p">,</span> <span class="s1">&#39;RCB&#39;</span><span class="p">,</span> <span class="s1">&#39;RCM&#39;</span><span class="p">,</span> <span class="s1">&#39;RDM&#39;</span><span class="p">,</span> <span class="s1">&#39;RF&#39;</span><span class="p">,</span> <span class="s1">&#39;RM&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;RS&#39;</span><span class="p">,</span> <span class="s1">&#39;RW&#39;</span><span class="p">,</span> <span class="s1">&#39;RWB&#39;</span><span class="p">,</span> <span class="s1">&#39;ST&#39;</span><span class="p">]</span>
+
+<span class="c1"># ordering columns to make more readable</span>
+<span class="n">columns_18</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ID&#39;</span><span class="p">,</span><span class="s1">&#39;Name&#39;</span><span class="p">,</span> <span class="s1">&#39;Age&#39;</span><span class="p">,</span> <span class="s1">&#39;Photo&#39;</span><span class="p">,</span> <span class="s1">&#39;Nationality&#39;</span><span class="p">,</span> <span class="s1">&#39;Overall&#39;</span><span class="p">,</span> <span class="s1">&#39;Potential&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;Special&#39;</span><span class="p">,</span> <span class="s1">&#39;CAM&#39;</span><span class="p">,</span> <span class="s1">&#39;CB&#39;</span><span class="p">,</span> <span class="s1">&#39;CDM&#39;</span><span class="p">,</span> <span class="s1">&#39;CF&#39;</span><span class="p">,</span> <span class="s1">&#39;CM&#39;</span><span class="p">,</span> 
+       <span class="s1">&#39;LAM&#39;</span><span class="p">,</span> <span class="s1">&#39;LB&#39;</span><span class="p">,</span> <span class="s1">&#39;LCB&#39;</span><span class="p">,</span> <span class="s1">&#39;LCM&#39;</span><span class="p">,</span> <span class="s1">&#39;LDM&#39;</span><span class="p">,</span> <span class="s1">&#39;LF&#39;</span><span class="p">,</span> <span class="s1">&#39;LM&#39;</span><span class="p">,</span> <span class="s1">&#39;LS&#39;</span><span class="p">,</span> <span class="s1">&#39;LW&#39;</span><span class="p">,</span> <span class="s1">&#39;LWB&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;Preferred Positions&#39;</span><span class="p">,</span> <span class="s1">&#39;RAM&#39;</span><span class="p">,</span> <span class="s1">&#39;RB&#39;</span><span class="p">,</span> <span class="s1">&#39;RCB&#39;</span><span class="p">,</span> <span class="s1">&#39;RCM&#39;</span><span class="p">,</span> <span class="s1">&#39;RDM&#39;</span><span class="p">,</span> <span class="s1">&#39;RF&#39;</span><span class="p">,</span> <span class="s1">&#39;RM&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;RS&#39;</span><span class="p">,</span> <span class="s1">&#39;RW&#39;</span><span class="p">,</span> <span class="s1">&#39;RWB&#39;</span><span class="p">,</span> <span class="s1">&#39;ST&#39;</span><span class="p">,</span> <span class="s1">&#39;Acceleration&#39;</span><span class="p">,</span> <span class="s1">&#39;Aggression&#39;</span><span class="p">,</span> <span class="s1">&#39;Agility&#39;</span><span class="p">,</span> <span class="s1">&#39;Balance&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;BallControl&#39;</span><span class="p">,</span> <span class="s1">&#39;Composure&#39;</span><span class="p">,</span> <span class="s1">&#39;Crossing&#39;</span><span class="p">,</span> <span class="s1">&#39;Curve&#39;</span><span class="p">,</span> <span class="s1">&#39;Dribbling&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;Finishing&#39;</span><span class="p">,</span> <span class="s1">&#39;FKAccuracy&#39;</span><span class="p">,</span> <span class="s1">&#39;HeadingAccuracy&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;Interceptions&#39;</span><span class="p">,</span> <span class="s1">&#39;Jumping&#39;</span><span class="p">,</span> <span class="s1">&#39;LongPassing&#39;</span><span class="p">,</span> <span class="s1">&#39;LongShots&#39;</span><span class="p">,</span> <span class="s1">&#39;Marking&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;Penalties&#39;</span><span class="p">,</span> <span class="s1">&#39;Positioning&#39;</span><span class="p">,</span> <span class="s1">&#39;Reactions&#39;</span><span class="p">,</span> <span class="s1">&#39;ShortPassing&#39;</span><span class="p">,</span> <span class="s1">&#39;ShotPower&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;SlidingTackle&#39;</span><span class="p">,</span> <span class="s1">&#39;SprintSpeed&#39;</span><span class="p">,</span> <span class="s1">&#39;Stamina&#39;</span><span class="p">,</span> <span class="s1">&#39;StandingTackle&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;Strength&#39;</span><span class="p">,</span> <span class="s1">&#39;Vision&#39;</span><span class="p">,</span> <span class="s1">&#39;Volleys&#39;</span><span class="p">,</span> <span class="s1">&#39;GKDiving&#39;</span><span class="p">,</span> <span class="s1">&#39;GKHandling&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;GKKicking&#39;</span><span class="p">,</span> <span class="s1">&#39;GKPositioning&#39;</span><span class="p">,</span> <span class="s1">&#39;GKReflexes&#39;</span><span class="p">]</span>
+<span class="n">fifa_18</span> <span class="o">=</span> <span class="n">fifa_18</span><span class="p">[</span><span class="n">columns_18</span><span class="p">]</span>
+
+<span class="n">fifa_18</span><span class="p">[</span><span class="s1">&#39;Year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2018</span>
+<span class="n">fifa_19</span><span class="p">[</span><span class="s1">&#39;Year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2019</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[401]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">euro_db</span> <span class="o">=</span> <span class="n">euro_db</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;attacking_work_rate&#39;</span><span class="p">,</span> <span class="s1">&#39;defensive_work_rate&#39;</span><span class="p">,</span> <span class="s1">&#39;id.1&#39;</span><span class="p">,</span> <span class="s1">&#39;player_api_id.1&#39;</span><span class="p">,</span> <span class="s1">&#39;player_fifa_api_id.1&#39;</span><span class="p">])</span>
+
+<span class="c1"># renaming some columns to fit with fifa_19</span>
+<span class="n">euro_db</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ID&#39;</span><span class="p">,</span> <span class="s1">&#39;player_api_id&#39;</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;Overall&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;Potential&#39;</span><span class="p">,</span> <span class="s1">&#39;PreferredFoot&#39;</span><span class="p">,</span> <span class="s1">&#39;Crossing&#39;</span><span class="p">,</span> <span class="s1">&#39;Finishing&#39;</span><span class="p">,</span> <span class="s1">&#39;HeadingAccuracy&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;ShortPassing&#39;</span><span class="p">,</span> <span class="s1">&#39;Volleys&#39;</span><span class="p">,</span> <span class="s1">&#39;Dribbling&#39;</span><span class="p">,</span> <span class="s1">&#39;Curve&#39;</span><span class="p">,</span> <span class="s1">&#39;FKAccuracy&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;long_passing&#39;</span><span class="p">,</span> <span class="s1">&#39;BallControl&#39;</span><span class="p">,</span> <span class="s1">&#39;Acceleration&#39;</span><span class="p">,</span> <span class="s1">&#39;SprintSpeed&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;Agility&#39;</span><span class="p">,</span> <span class="s1">&#39;Reactions&#39;</span><span class="p">,</span> <span class="s1">&#39;Balance&#39;</span><span class="p">,</span> <span class="s1">&#39;ShotPower&#39;</span><span class="p">,</span> <span class="s1">&#39;Jumping&#39;</span><span class="p">,</span> <span class="s1">&#39;Stamina&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;Strength&#39;</span><span class="p">,</span> <span class="s1">&#39;LongShots&#39;</span><span class="p">,</span> <span class="s1">&#39;Aggression&#39;</span><span class="p">,</span> <span class="s1">&#39;Interceptions&#39;</span><span class="p">,</span> <span class="s1">&#39;Positioning&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;Vision&#39;</span><span class="p">,</span> <span class="s1">&#39;Penalties&#39;</span><span class="p">,</span> <span class="s1">&#39;Marking&#39;</span><span class="p">,</span> <span class="s1">&#39;StandingTackle&#39;</span><span class="p">,</span> <span class="s1">&#39;SlidingTackle&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;GKDiving&#39;</span><span class="p">,</span> <span class="s1">&#39;GKHandling&#39;</span><span class="p">,</span> <span class="s1">&#39;GKKicking&#39;</span><span class="p">,</span> <span class="s1">&#39;GKPositioning&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;GKReflexes&#39;</span><span class="p">,</span> <span class="s1">&#39;Name&#39;</span><span class="p">,</span> <span class="s1">&#39;birthday&#39;</span><span class="p">,</span> <span class="s1">&#39;height&#39;</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">]</span>
+
+<span class="c1"># ordering columns to make more readable</span>
+<span class="n">columns_euro</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ID&#39;</span><span class="p">,</span> <span class="s1">&#39;Name&#39;</span><span class="p">,</span> <span class="s1">&#39;birthday&#39;</span><span class="p">,</span> <span class="s1">&#39;height&#39;</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;Overall&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;Potential&#39;</span><span class="p">,</span> <span class="s1">&#39;PreferredFoot&#39;</span><span class="p">,</span> <span class="s1">&#39;Crossing&#39;</span><span class="p">,</span> <span class="s1">&#39;Finishing&#39;</span><span class="p">,</span> <span class="s1">&#39;HeadingAccuracy&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;ShortPassing&#39;</span><span class="p">,</span> <span class="s1">&#39;Volleys&#39;</span><span class="p">,</span> <span class="s1">&#39;Dribbling&#39;</span><span class="p">,</span> <span class="s1">&#39;Curve&#39;</span><span class="p">,</span> <span class="s1">&#39;FKAccuracy&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;long_passing&#39;</span><span class="p">,</span> <span class="s1">&#39;BallControl&#39;</span><span class="p">,</span> <span class="s1">&#39;Acceleration&#39;</span><span class="p">,</span> <span class="s1">&#39;SprintSpeed&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;Agility&#39;</span><span class="p">,</span> <span class="s1">&#39;Reactions&#39;</span><span class="p">,</span> <span class="s1">&#39;Balance&#39;</span><span class="p">,</span> <span class="s1">&#39;ShotPower&#39;</span><span class="p">,</span> <span class="s1">&#39;Jumping&#39;</span><span class="p">,</span> <span class="s1">&#39;Stamina&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;Strength&#39;</span><span class="p">,</span> <span class="s1">&#39;LongShots&#39;</span><span class="p">,</span> <span class="s1">&#39;Aggression&#39;</span><span class="p">,</span> <span class="s1">&#39;Interceptions&#39;</span><span class="p">,</span> <span class="s1">&#39;Positioning&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;Vision&#39;</span><span class="p">,</span> <span class="s1">&#39;Penalties&#39;</span><span class="p">,</span> <span class="s1">&#39;Marking&#39;</span><span class="p">,</span> <span class="s1">&#39;StandingTackle&#39;</span><span class="p">,</span> <span class="s1">&#39;SlidingTackle&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;GKDiving&#39;</span><span class="p">,</span> <span class="s1">&#39;GKHandling&#39;</span><span class="p">,</span> <span class="s1">&#39;GKKicking&#39;</span><span class="p">,</span> <span class="s1">&#39;GKPositioning&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;GKReflexes&#39;</span><span class="p">,</span> <span class="s1">&#39;player_api_id&#39;</span><span class="p">]</span>
+<span class="n">euro_db</span> <span class="o">=</span> <span class="n">euro_db</span><span class="p">[</span><span class="n">columns_euro</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[416]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mapi_db</span> <span class="o">=</span> <span class="n">mapi_db</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;work_rate&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;wage&#39;</span><span class="p">,</span> <span class="s1">&#39;release_clause&#39;</span><span class="p">,</span> <span class="s1">&#39;real_face&#39;</span><span class="p">])</span>
+
+<span class="n">mapi_db</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;birth_date&#39;</span><span class="p">,</span> <span class="s1">&#39;body_type&#39;</span><span class="p">,</span> <span class="s1">&#39;height&#39;</span><span class="p">,</span> <span class="s1">&#39;player_id&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;International Reputation&#39;</span><span class="p">,</span> <span class="s1">&#39;Name&#39;</span><span class="p">,</span> <span class="s1">&#39;Overall&#39;</span><span class="p">,</span> <span class="s1">&#39;photo_url&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;PlayerHashtags&#39;</span><span class="p">,</span> <span class="s1">&#39;PlayerTraits&#39;</span><span class="p">,</span> <span class="s1">&#39;positions&#39;</span><span class="p">,</span> <span class="s1">&#39;Potential&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;preferred_foot&#39;</span><span class="p">,</span> <span class="s1">&#39;skill_moves&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;skills&#39;</span><span class="p">,</span> <span class="s1">&#39;social&#39;</span><span class="p">,</span> <span class="s1">&#39;weak_foot&#39;</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">]</span>
+
+<span class="n">columns_mapi</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;player_id&#39;</span><span class="p">,</span> <span class="s1">&#39;Name&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;birth_date&#39;</span><span class="p">,</span> <span class="s1">&#39;body_type&#39;</span><span class="p">,</span> <span class="s1">&#39;height&#39;</span><span class="p">,</span><span class="s1">&#39;weight&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;International Reputation&#39;</span><span class="p">,</span> <span class="s1">&#39;Overall&#39;</span><span class="p">,</span> <span class="s1">&#39;photo_url&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;PlayerHashtags&#39;</span><span class="p">,</span> <span class="s1">&#39;PlayerTraits&#39;</span><span class="p">,</span> <span class="s1">&#39;positions&#39;</span><span class="p">,</span> <span class="s1">&#39;Potential&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;preferred_foot&#39;</span><span class="p">,</span> <span class="s1">&#39;skill_moves&#39;</span><span class="p">,</span> <span class="s1">&#39;skills&#39;</span><span class="p">,</span> <span class="s1">&#39;social&#39;</span><span class="p">,</span> <span class="s1">&#39;weak_foot&#39;</span><span class="p">]</span>
+<span class="n">mapi_db</span> <span class="o">=</span> <span class="n">mapi_db</span><span class="p">[</span><span class="n">columns_mapi</span><span class="p">]</span>
+
+<span class="c1"># key columns for matching to an ID - focus on precision over recall</span>
+<span class="c1"># mapi_db[[&#39;birth_date&#39;, &#39;height&#39;, &#39;Name&#39;]].head()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Schema-Table">Schema Table<a class="anchor-link" href="#Schema-Table">&#182;</a></h2><p>dbdiagram.io</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Matching-Player-IDs-to-Qualitative-Descriptions">Matching Player IDs to Qualitative Descriptions<a class="anchor-link" href="#Matching-Player-IDs-to-Qualitative-Descriptions">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[417]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mapi_db</span><span class="o">.</span><span class="n">columns</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[417]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Index([&#39;player_id&#39;, &#39;Name&#39;, &#39;age&#39;, &#39;birth_date&#39;, &#39;body_type&#39;, &#39;height&#39;,
+       &#39;International Reputation&#39;, &#39;Overall&#39;, &#39;photo_url&#39;, &#39;PlayerHashtags&#39;,
+       &#39;PlayerTraits&#39;, &#39;positions&#39;, &#39;Potential&#39;, &#39;preferred_foot&#39;,
+       &#39;skill_moves&#39;, &#39;skills&#39;, &#39;social&#39;, &#39;weak_foot&#39;, &#39;weight&#39;],
+      dtype=&#39;object&#39;)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[418]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mapi_db</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[418]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>player_id</th>
+      <th>Name</th>
+      <th>age</th>
+      <th>birth_date</th>
+      <th>body_type</th>
+      <th>height</th>
+      <th>International Reputation</th>
+      <th>Overall</th>
+      <th>photo_url</th>
+      <th>PlayerHashtags</th>
+      <th>PlayerTraits</th>
+      <th>positions</th>
+      <th>Potential</th>
+      <th>preferred_foot</th>
+      <th>skill_moves</th>
+      <th>skills</th>
+      <th>social</th>
+      <th>weak_foot</th>
+      <th>weight</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>5b31d573831e1a000998d5f2</td>
+      <td>Lionel Messi</td>
+      <td>30</td>
+      <td>1987/Jun/24</td>
+      <td>Messi</td>
+      <td>170</td>
+      <td>5</td>
+      <td>94</td>
+      <td>https://cdn.sofifa.org/1x/18/players/158023.png</td>
+      <td>['#Dribbler', '#FK Specialist', '#Acrobat', '#...</td>
+      <td>['Finesse Shot', 'Long Shot Taker', 'Speed Dri...</td>
+      <td>['CF', 'ST', 'RW']</td>
+      <td>94</td>
+      <td>Left</td>
+      <td>4</td>
+      <td>{'crossing': 77, 'finishing': 95, 'heading_acc...</td>
+      <td>{'follow': 758, 'like': 632, 'dislike': 197}</td>
+      <td>4</td>
+      <td>72</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>5b31d573831e1a0008c0f804</td>
+      <td>C. Ronaldo dos Santos Aveiro</td>
+      <td>32</td>
+      <td>1985/Feb/5</td>
+      <td>C. Ronaldo</td>
+      <td>187</td>
+      <td>5</td>
+      <td>94</td>
+      <td>https://cdn.sofifa.org/1x/18/players/20801.png</td>
+      <td>['#Speedster', '#Dribbler', '#Distance Shooter...</td>
+      <td>['Power Free Kick', 'Diver', 'Flair', 'Long Sh...</td>
+      <td>['LW', 'ST']</td>
+      <td>94</td>
+      <td>Right</td>
+      <td>5</td>
+      <td>{'crossing': 85, 'finishing': 94, 'heading_acc...</td>
+      <td>{'follow': 735, 'like': 561, 'dislike': 260}</td>
+      <td>4</td>
+      <td>83</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>5b31d573831e1a0008c0f805</td>
+      <td>Neymar da Silva Santos Jr.</td>
+      <td>25</td>
+      <td>1992/Feb/5</td>
+      <td>Neymar</td>
+      <td>175</td>
+      <td>5</td>
+      <td>92</td>
+      <td>https://cdn.sofifa.org/1x/18/players/190871.png</td>
+      <td>['#Speedster', '#Dribbler', '#Acrobat']</td>
+      <td>['Diver', 'Flair', 'Speed Dribbler', 'Technica...</td>
+      <td>['LW']</td>
+      <td>93</td>
+      <td>Right</td>
+      <td>5</td>
+      <td>{'crossing': 75, 'finishing': 88, 'heading_acc...</td>
+      <td>{'follow': 1307, 'like': 434, 'dislike': 74}</td>
+      <td>5</td>
+      <td>68</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>5b31d574831e1a0008c0f806</td>
+      <td>Luis Suárez</td>
+      <td>30</td>
+      <td>1987/Jan/24</td>
+      <td>Normal</td>
+      <td>182</td>
+      <td>5</td>
+      <td>92</td>
+      <td>https://cdn.sofifa.org/1x/18/players/176580.png</td>
+      <td>['#Dribbler', '#Acrobat', '#Clinical Finisher']</td>
+      <td>['Diver', 'Tries To Beat Defensive Line', 'Out...</td>
+      <td>['ST']</td>
+      <td>92</td>
+      <td>Right</td>
+      <td>4</td>
+      <td>{'crossing': 77, 'finishing': 94, 'heading_acc...</td>
+      <td>{'follow': 387, 'like': 156, 'dislike': 48}</td>
+      <td>4</td>
+      <td>86</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5b31d574831e1a000998d5f3</td>
+      <td>Manuel Neuer</td>
+      <td>31</td>
+      <td>1986/Mar/27</td>
+      <td>Normal</td>
+      <td>193</td>
+      <td>5</td>
+      <td>92</td>
+      <td>https://cdn.sofifa.org/1x/18/players/167495.png</td>
+      <td>['']</td>
+      <td>['GK Long Throw', 'GK 1', 'on', '1 rush', 'GK ...</td>
+      <td>['GK']</td>
+      <td>92</td>
+      <td>Right</td>
+      <td>1</td>
+      <td>{'crossing': 15, 'finishing': 13, 'heading_acc...</td>
+      <td>{'follow': 332, 'like': 123, 'dislike': 11}</td>
+      <td>4</td>
+      <td>92</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[386]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fifa_19</span><span class="p">[</span><span class="n">fifa_19</span><span class="p">[</span><span class="s1">&#39;ID&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">39902</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[386]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Age</th>
+      <th>Photo</th>
+      <th>Nationality</th>
+      <th>Overall</th>
+      <th>Potential</th>
+      <th>Special</th>
+      <th>Preferred Foot</th>
+      <th>International Reputation</th>
+      <th>...</th>
+      <th>Penalties</th>
+      <th>Composure</th>
+      <th>Marking</th>
+      <th>StandingTackle</th>
+      <th>SlidingTackle</th>
+      <th>GKDiving</th>
+      <th>GKHandling</th>
+      <th>GKKicking</th>
+      <th>GKPositioning</th>
+      <th>GKReflexes</th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+<p>0 rows × 77 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[376]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">fifa_18</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">fifa_19</span><span class="o">.</span><span class="n">columns</span><span class="p">)]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[376]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[&#39;Preferred Positions&#39;]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[377]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">fifa_19</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">fifa_18</span><span class="o">.</span><span class="n">columns</span><span class="p">)]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[377]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[&#39;Preferred Foot&#39;,
+ &#39;International Reputation&#39;,
+ &#39;Weak Foot&#39;,
+ &#39;Skill Moves&#39;,
+ &#39;Work Rate&#39;,
+ &#39;Body Type&#39;,
+ &#39;Position&#39;,
+ &#39;Height&#39;,
+ &#39;Weight&#39;]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[81]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">convert_date</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span>
+    
+<span class="n">euro_db</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">euro_db</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">convert_date</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[82]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">euro_db</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">euro_db</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">year</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[83]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">euro_db</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[83]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(array([16138.,  5798.,  8993., 10829., 11976., 12632., 38867., 32808.,
+        31834., 14103.]),
+ array([2007. , 2007.9, 2008.8, 2009.7, 2010.6, 2011.5, 2012.4, 2013.3,
+        2014.2, 2015.1, 2016. ]),
+ &lt;a list of 10 Patch objects&gt;)</pre>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[91]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">euro_db</span><span class="p">[</span><span class="s1">&#39;player_api_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">())</span> <span class="c1"># ~11k players out of 18k, which is decent coverage (we will have more data points spread out across players, instead of them concentrated among a few)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[91]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>11060</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[36]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">date_time_str</span> <span class="o">=</span> <span class="n">euro_db</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">date_time_obj</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date_time_str</span><span class="p">,</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[37]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">date_time_obj</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[37]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>datetime.datetime(2016, 2, 18, 0, 0)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">fifa_19</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[9]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>18207</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[335]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">fifa_18</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
+<span class="n">fifa_18</span><span class="o">.</span><span class="n">columns</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>70
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[335]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Index([&#39;Name&#39;, &#39;Age&#39;, &#39;Photo&#39;, &#39;Nationality&#39;, &#39;Flag&#39;, &#39;Overall&#39;, &#39;Potential&#39;,
+       &#39;Special&#39;, &#39;Acceleration&#39;, &#39;Aggression&#39;, &#39;Agility&#39;, &#39;Balance&#39;,
+       &#39;Ball control&#39;, &#39;Composure&#39;, &#39;Crossing&#39;, &#39;Curve&#39;, &#39;Dribbling&#39;,
+       &#39;Finishing&#39;, &#39;Free kick accuracy&#39;, &#39;GK diving&#39;, &#39;GK handling&#39;,
+       &#39;GK kicking&#39;, &#39;GK positioning&#39;, &#39;GK reflexes&#39;, &#39;Heading accuracy&#39;,
+       &#39;Interceptions&#39;, &#39;Jumping&#39;, &#39;Long passing&#39;, &#39;Long shots&#39;, &#39;Marking&#39;,
+       &#39;Penalties&#39;, &#39;Positioning&#39;, &#39;Reactions&#39;, &#39;Short passing&#39;, &#39;Shot power&#39;,
+       &#39;Sliding tackle&#39;, &#39;Sprint speed&#39;, &#39;Stamina&#39;, &#39;Standing tackle&#39;,
+       &#39;Strength&#39;, &#39;Vision&#39;, &#39;Volleys&#39;, &#39;CAM&#39;, &#39;CB&#39;, &#39;CDM&#39;, &#39;CF&#39;, &#39;CM&#39;, &#39;ID&#39;,
+       &#39;LAM&#39;, &#39;LB&#39;, &#39;LCB&#39;, &#39;LCM&#39;, &#39;LDM&#39;, &#39;LF&#39;, &#39;LM&#39;, &#39;LS&#39;, &#39;LW&#39;, &#39;LWB&#39;,
+       &#39;Preferred Positions&#39;, &#39;RAM&#39;, &#39;RB&#39;, &#39;RCB&#39;, &#39;RCM&#39;, &#39;RDM&#39;, &#39;RF&#39;, &#39;RM&#39;,
+       &#39;RS&#39;, &#39;RW&#39;, &#39;RWB&#39;, &#39;ST&#39;],
+      dtype=&#39;object&#39;)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[333]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">fifa_19</span><span class="o">.</span><span class="n">columns</span><span class="p">)))</span>
+<span class="n">fifa_19</span><span class="o">.</span><span class="n">columns</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>78
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[333]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Index([&#39;ID&#39;, &#39;Name&#39;, &#39;Age&#39;, &#39;Photo&#39;, &#39;Nationality&#39;, &#39;Overall&#39;, &#39;Potential&#39;,
+       &#39;Special&#39;, &#39;Preferred Foot&#39;, &#39;International Reputation&#39;, &#39;Weak Foot&#39;,
+       &#39;Skill Moves&#39;, &#39;Work Rate&#39;, &#39;Body Type&#39;, &#39;Real Face&#39;, &#39;Position&#39;,
+       &#39;Height&#39;, &#39;Weight&#39;, &#39;LS&#39;, &#39;ST&#39;, &#39;RS&#39;, &#39;LW&#39;, &#39;LF&#39;, &#39;CF&#39;, &#39;RF&#39;, &#39;RW&#39;,
+       &#39;LAM&#39;, &#39;CAM&#39;, &#39;RAM&#39;, &#39;LM&#39;, &#39;LCM&#39;, &#39;CM&#39;, &#39;RCM&#39;, &#39;RM&#39;, &#39;LWB&#39;, &#39;LDM&#39;,
+       &#39;CDM&#39;, &#39;RDM&#39;, &#39;RWB&#39;, &#39;LB&#39;, &#39;LCB&#39;, &#39;CB&#39;, &#39;RCB&#39;, &#39;RB&#39;, &#39;Crossing&#39;,
+       &#39;Finishing&#39;, &#39;HeadingAccuracy&#39;, &#39;ShortPassing&#39;, &#39;Volleys&#39;, &#39;Dribbling&#39;,
+       &#39;Curve&#39;, &#39;FKAccuracy&#39;, &#39;LongPassing&#39;, &#39;BallControl&#39;, &#39;Acceleration&#39;,
+       &#39;SprintSpeed&#39;, &#39;Agility&#39;, &#39;Reactions&#39;, &#39;Balance&#39;, &#39;ShotPower&#39;,
+       &#39;Jumping&#39;, &#39;Stamina&#39;, &#39;Strength&#39;, &#39;LongShots&#39;, &#39;Aggression&#39;,
+       &#39;Interceptions&#39;, &#39;Positioning&#39;, &#39;Vision&#39;, &#39;Penalties&#39;, &#39;Composure&#39;,
+       &#39;Marking&#39;, &#39;StandingTackle&#39;, &#39;SlidingTackle&#39;, &#39;GKDiving&#39;, &#39;GKHandling&#39;,
+       &#39;GKKicking&#39;, &#39;GKPositioning&#39;, &#39;GKReflexes&#39;],
+      dtype=&#39;object&#39;)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[124]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">fifa_18</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">fifa_19</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">))</span>
+<span class="c1"># 17981</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[124]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>12539</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[125]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">fifa_19</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">fifa_18</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[125]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>12539</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[130]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">euro_test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">euro_db</span><span class="p">[</span><span class="s1">&#39;player_fifa_api_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">())</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[133]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">euro_test</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[133]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>player_fifa_api_id</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>218353</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>189615</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>186170</td>
+    </tr>
+    <tr>
+      <th>64</th>
+      <td>140161</td>
+    </tr>
+    <tr>
+      <th>87</th>
+      <td>17725</td>
+    </tr>
+    <tr>
+      <th>112</th>
+      <td>158138</td>
+    </tr>
+    <tr>
+      <th>139</th>
+      <td>221280</td>
+    </tr>
+    <tr>
+      <th>146</th>
+      <td>152747</td>
+    </tr>
+    <tr>
+      <th>172</th>
+      <td>206592</td>
+    </tr>
+    <tr>
+      <th>179</th>
+      <td>188621</td>
+    </tr>
+    <tr>
+      <th>198</th>
+      <td>47189</td>
+    </tr>
+    <tr>
+      <th>206</th>
+      <td>194958</td>
+    </tr>
+    <tr>
+      <th>234</th>
+      <td>213568</td>
+    </tr>
+    <tr>
+      <th>242</th>
+      <td>183853</td>
+    </tr>
+    <tr>
+      <th>269</th>
+      <td>186561</td>
+    </tr>
+    <tr>
+      <th>309</th>
+      <td>226014</td>
+    </tr>
+    <tr>
+      <th>317</th>
+      <td>213569</td>
+    </tr>
+    <tr>
+      <th>335</th>
+      <td>2335</td>
+    </tr>
+    <tr>
+      <th>357</th>
+      <td>187939</td>
+    </tr>
+    <tr>
+      <th>373</th>
+      <td>156626</td>
+    </tr>
+    <tr>
+      <th>378</th>
+      <td>192274</td>
+    </tr>
+    <tr>
+      <th>392</th>
+      <td>202425</td>
+    </tr>
+    <tr>
+      <th>394</th>
+      <td>188145</td>
+    </tr>
+    <tr>
+      <th>415</th>
+      <td>178063</td>
+    </tr>
+    <tr>
+      <th>441</th>
+      <td>212934</td>
+    </tr>
+    <tr>
+      <th>446</th>
+      <td>52782</td>
+    </tr>
+    <tr>
+      <th>451</th>
+      <td>51868</td>
+    </tr>
+    <tr>
+      <th>456</th>
+      <td>209399</td>
+    </tr>
+    <tr>
+      <th>459</th>
+      <td>210504</td>
+    </tr>
+    <tr>
+      <th>465</th>
+      <td>149241</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>183561</th>
+      <td>212639</td>
+    </tr>
+    <tr>
+      <th>183564</th>
+      <td>158293</td>
+    </tr>
+    <tr>
+      <th>183571</th>
+      <td>206209</td>
+    </tr>
+    <tr>
+      <th>183589</th>
+      <td>207780</td>
+    </tr>
+    <tr>
+      <th>183607</th>
+      <td>223263</td>
+    </tr>
+    <tr>
+      <th>183617</th>
+      <td>195862</td>
+    </tr>
+    <tr>
+      <th>183625</th>
+      <td>228821</td>
+    </tr>
+    <tr>
+      <th>183634</th>
+      <td>204227</td>
+    </tr>
+    <tr>
+      <th>183649</th>
+      <td>202751</td>
+    </tr>
+    <tr>
+      <th>183660</th>
+      <td>222537</td>
+    </tr>
+    <tr>
+      <th>183665</th>
+      <td>31667</td>
+    </tr>
+    <tr>
+      <th>183672</th>
+      <td>41236</td>
+    </tr>
+    <tr>
+      <th>183693</th>
+      <td>176103</td>
+    </tr>
+    <tr>
+      <th>183713</th>
+      <td>141111</td>
+    </tr>
+    <tr>
+      <th>183737</th>
+      <td>188405</td>
+    </tr>
+    <tr>
+      <th>183750</th>
+      <td>173474</td>
+    </tr>
+    <tr>
+      <th>183789</th>
+      <td>158142</td>
+    </tr>
+    <tr>
+      <th>183796</th>
+      <td>137089</td>
+    </tr>
+    <tr>
+      <th>183822</th>
+      <td>179712</td>
+    </tr>
+    <tr>
+      <th>183849</th>
+      <td>157283</td>
+    </tr>
+    <tr>
+      <th>183856</th>
+      <td>219943</td>
+    </tr>
+    <tr>
+      <th>183867</th>
+      <td>188593</td>
+    </tr>
+    <tr>
+      <th>183872</th>
+      <td>105454</td>
+    </tr>
+    <tr>
+      <th>183895</th>
+      <td>195840</td>
+    </tr>
+    <tr>
+      <th>183903</th>
+      <td>205705</td>
+    </tr>
+    <tr>
+      <th>183924</th>
+      <td>2488</td>
+    </tr>
+    <tr>
+      <th>183937</th>
+      <td>164680</td>
+    </tr>
+    <tr>
+      <th>183953</th>
+      <td>111191</td>
+    </tr>
+    <tr>
+      <th>183960</th>
+      <td>47058</td>
+    </tr>
+    <tr>
+      <th>183968</th>
+      <td>102359</td>
+    </tr>
+  </tbody>
+</table>
+<p>11062 rows × 1 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[137]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">fifa_19</span><span class="p">[</span><span class="s1">&#39;ID&#39;</span><span class="p">],</span> <span class="n">euro_test</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;player_fifa_api_id&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[137]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ID</th>
+      <th>player_fifa_api_id</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>158023</td>
+      <td>158023</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>20801</td>
+      <td>20801</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>190871</td>
+      <td>190871</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>193080</td>
+      <td>193080</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>192985</td>
+      <td>192985</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>183277</td>
+      <td>183277</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>177003</td>
+      <td>177003</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>176580</td>
+      <td>176580</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>155862</td>
+      <td>155862</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>200389</td>
+      <td>200389</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>188545</td>
+      <td>188545</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>182521</td>
+      <td>182521</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>182493</td>
+      <td>182493</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>168542</td>
+      <td>168542</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>215914</td>
+      <td>215914</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>211110</td>
+      <td>211110</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>202126</td>
+      <td>202126</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>194765</td>
+      <td>194765</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>192448</td>
+      <td>192448</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>192119</td>
+      <td>192119</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>189511</td>
+      <td>189511</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>179813</td>
+      <td>179813</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>167495</td>
+      <td>167495</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>153079</td>
+      <td>153079</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>138956</td>
+      <td>138956</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>231747</td>
+      <td>231747</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>209331</td>
+      <td>209331</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>200145</td>
+      <td>200145</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>198710</td>
+      <td>198710</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>198219</td>
+      <td>198219</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>4590</th>
+      <td>192961</td>
+      <td>192961</td>
+    </tr>
+    <tr>
+      <th>4591</th>
+      <td>169725</td>
+      <td>169725</td>
+    </tr>
+    <tr>
+      <th>4592</th>
+      <td>226563</td>
+      <td>226563</td>
+    </tr>
+    <tr>
+      <th>4593</th>
+      <td>224526</td>
+      <td>224526</td>
+    </tr>
+    <tr>
+      <th>4594</th>
+      <td>198162</td>
+      <td>198162</td>
+    </tr>
+    <tr>
+      <th>4595</th>
+      <td>219701</td>
+      <td>219701</td>
+    </tr>
+    <tr>
+      <th>4596</th>
+      <td>159074</td>
+      <td>159074</td>
+    </tr>
+    <tr>
+      <th>4597</th>
+      <td>193658</td>
+      <td>193658</td>
+    </tr>
+    <tr>
+      <th>4598</th>
+      <td>228999</td>
+      <td>228999</td>
+    </tr>
+    <tr>
+      <th>4599</th>
+      <td>182738</td>
+      <td>182738</td>
+    </tr>
+    <tr>
+      <th>4600</th>
+      <td>221930</td>
+      <td>221930</td>
+    </tr>
+    <tr>
+      <th>4601</th>
+      <td>138786</td>
+      <td>138786</td>
+    </tr>
+    <tr>
+      <th>4602</th>
+      <td>228143</td>
+      <td>228143</td>
+    </tr>
+    <tr>
+      <th>4603</th>
+      <td>228921</td>
+      <td>228921</td>
+    </tr>
+    <tr>
+      <th>4604</th>
+      <td>224582</td>
+      <td>224582</td>
+    </tr>
+    <tr>
+      <th>4605</th>
+      <td>48722</td>
+      <td>48722</td>
+    </tr>
+    <tr>
+      <th>4606</th>
+      <td>204396</td>
+      <td>204396</td>
+    </tr>
+    <tr>
+      <th>4607</th>
+      <td>188795</td>
+      <td>188795</td>
+    </tr>
+    <tr>
+      <th>4608</th>
+      <td>137356</td>
+      <td>137356</td>
+    </tr>
+    <tr>
+      <th>4609</th>
+      <td>190179</td>
+      <td>190179</td>
+    </tr>
+    <tr>
+      <th>4610</th>
+      <td>28157</td>
+      <td>28157</td>
+    </tr>
+    <tr>
+      <th>4611</th>
+      <td>202800</td>
+      <td>202800</td>
+    </tr>
+    <tr>
+      <th>4612</th>
+      <td>226454</td>
+      <td>226454</td>
+    </tr>
+    <tr>
+      <th>4613</th>
+      <td>232668</td>
+      <td>232668</td>
+    </tr>
+    <tr>
+      <th>4614</th>
+      <td>206567</td>
+      <td>206567</td>
+    </tr>
+    <tr>
+      <th>4615</th>
+      <td>222524</td>
+      <td>222524</td>
+    </tr>
+    <tr>
+      <th>4616</th>
+      <td>226014</td>
+      <td>226014</td>
+    </tr>
+    <tr>
+      <th>4617</th>
+      <td>224819</td>
+      <td>224819</td>
+    </tr>
+    <tr>
+      <th>4618</th>
+      <td>226490</td>
+      <td>226490</td>
+    </tr>
+    <tr>
+      <th>4619</th>
+      <td>29118</td>
+      <td>29118</td>
+    </tr>
+  </tbody>
+</table>
+<p>4620 rows × 2 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[136]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">fifa_18</span><span class="p">[</span><span class="s1">&#39;ID&#39;</span><span class="p">],</span> <span class="n">euro_test</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;player_fifa_api_id&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[136]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ID</th>
+      <th>player_fifa_api_id</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>20801</td>
+      <td>20801</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>158023</td>
+      <td>158023</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>190871</td>
+      <td>190871</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>176580</td>
+      <td>176580</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>167495</td>
+      <td>167495</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>188545</td>
+      <td>188545</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>193080</td>
+      <td>193080</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>183277</td>
+      <td>183277</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>182521</td>
+      <td>182521</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>167664</td>
+      <td>167664</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>155862</td>
+      <td>155862</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>192985</td>
+      <td>192985</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>192119</td>
+      <td>192119</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>184941</td>
+      <td>184941</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>177003</td>
+      <td>177003</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>173731</td>
+      <td>173731</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>153079</td>
+      <td>153079</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>138956</td>
+      <td>138956</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>1179</td>
+      <td>1179</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>211110</td>
+      <td>211110</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>200389</td>
+      <td>200389</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>194765</td>
+      <td>194765</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>189509</td>
+      <td>189509</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>188567</td>
+      <td>188567</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>184344</td>
+      <td>184344</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>183907</td>
+      <td>183907</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>182493</td>
+      <td>182493</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>178603</td>
+      <td>178603</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>176635</td>
+      <td>176635</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>167948</td>
+      <td>167948</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>5181</th>
+      <td>213687</td>
+      <td>213687</td>
+    </tr>
+    <tr>
+      <th>5182</th>
+      <td>4323</td>
+      <td>4323</td>
+    </tr>
+    <tr>
+      <th>5183</th>
+      <td>233188</td>
+      <td>233188</td>
+    </tr>
+    <tr>
+      <th>5184</th>
+      <td>212713</td>
+      <td>212713</td>
+    </tr>
+    <tr>
+      <th>5185</th>
+      <td>210425</td>
+      <td>210425</td>
+    </tr>
+    <tr>
+      <th>5186</th>
+      <td>228874</td>
+      <td>228874</td>
+    </tr>
+    <tr>
+      <th>5187</th>
+      <td>229930</td>
+      <td>229930</td>
+    </tr>
+    <tr>
+      <th>5188</th>
+      <td>202800</td>
+      <td>202800</td>
+    </tr>
+    <tr>
+      <th>5189</th>
+      <td>226239</td>
+      <td>226239</td>
+    </tr>
+    <tr>
+      <th>5190</th>
+      <td>228921</td>
+      <td>228921</td>
+    </tr>
+    <tr>
+      <th>5191</th>
+      <td>221764</td>
+      <td>221764</td>
+    </tr>
+    <tr>
+      <th>5192</th>
+      <td>224582</td>
+      <td>224582</td>
+    </tr>
+    <tr>
+      <th>5193</th>
+      <td>215635</td>
+      <td>215635</td>
+    </tr>
+    <tr>
+      <th>5194</th>
+      <td>224915</td>
+      <td>224915</td>
+    </tr>
+    <tr>
+      <th>5195</th>
+      <td>231385</td>
+      <td>231385</td>
+    </tr>
+    <tr>
+      <th>5196</th>
+      <td>216299</td>
+      <td>216299</td>
+    </tr>
+    <tr>
+      <th>5197</th>
+      <td>223224</td>
+      <td>223224</td>
+    </tr>
+    <tr>
+      <th>5198</th>
+      <td>229481</td>
+      <td>229481</td>
+    </tr>
+    <tr>
+      <th>5199</th>
+      <td>215447</td>
+      <td>215447</td>
+    </tr>
+    <tr>
+      <th>5200</th>
+      <td>220668</td>
+      <td>220668</td>
+    </tr>
+    <tr>
+      <th>5201</th>
+      <td>230691</td>
+      <td>230691</td>
+    </tr>
+    <tr>
+      <th>5202</th>
+      <td>212277</td>
+      <td>212277</td>
+    </tr>
+    <tr>
+      <th>5203</th>
+      <td>214895</td>
+      <td>214895</td>
+    </tr>
+    <tr>
+      <th>5204</th>
+      <td>226479</td>
+      <td>226479</td>
+    </tr>
+    <tr>
+      <th>5205</th>
+      <td>220602</td>
+      <td>220602</td>
+    </tr>
+    <tr>
+      <th>5206</th>
+      <td>226490</td>
+      <td>226490</td>
+    </tr>
+    <tr>
+      <th>5207</th>
+      <td>226560</td>
+      <td>226560</td>
+    </tr>
+    <tr>
+      <th>5208</th>
+      <td>230690</td>
+      <td>230690</td>
+    </tr>
+    <tr>
+      <th>5209</th>
+      <td>232668</td>
+      <td>232668</td>
+    </tr>
+    <tr>
+      <th>5210</th>
+      <td>221930</td>
+      <td>221930</td>
+    </tr>
+  </tbody>
+</table>
+<p>5211 rows × 2 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[272]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">fifa_19</span><span class="p">[</span><span class="s1">&#39;ID&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">fifa_18</span><span class="p">[</span><span class="s1">&#39;ID&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">euro_db</span><span class="p">[</span><span class="s1">&#39;player_fifa_api_id&#39;</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[281]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="c1"># total unique players</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[281]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>29125</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[285]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="mf">2.1477e+04</span><span class="o">/</span> <span class="mi">29125</span> <span class="c1"># 73% have between 0-10 values.</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[285]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0.7374077253218884</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[293]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">(</span><span class="mi">9775</span><span class="o">+</span><span class="mi">8411</span><span class="p">)</span><span class="o">/</span> <span class="mi">29125</span> <span class="c1"># 1/3 have only 1 value, &gt;60% have 2 values</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[293]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0.6244120171673819</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[297]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">55</span><span class="p">])</span> <span class="c1"># get the no. of instances we have for each player</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[297]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(array([   0., 9775., 8411.,  292., 2618., 1711., 1701., 1815., 2788.,
+          10.]),
+ array([ 0,  1,  2,  3,  4, 10, 15, 20, 25, 50, 55]),
+ &lt;a list of 10 Patch objects&gt;)</pre>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[279]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">Counter</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="nb">list</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="nb">list</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[279]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[28,
+ 27,
+ 27,
+ 27,
+ 40,
+ 31,
+ 26,
+ 42,
+ 21,
+ 27,
+ 34,
+ 31,
+ 24,
+ 28,
+ 27,
+ 41,
+ 48,
+ 38,
+ 25,
+ 24,
+ 27,
+ 31,
+ 31,
+ 37,
+ 47,
+ 5,
+ 27,
+ 26,
+ 24,
+ 36,
+ 27,
+ 35,
+ 34,
+ 45,
+ 32,
+ 24,
+ 33,
+ 26,
+ 39,
+ 26,
+ 35,
+ 33,
+ 29,
+ 40,
+ 32,
+ 46,
+ 25,
+ 41,
+ 48,
+ 20,
+ 40,
+ 29,
+ 34,
+ 28,
+ 23,
+ 32,
+ 17,
+ 26,
+ 29,
+ 27,
+ 35,
+ 36,
+ 21,
+ 23,
+ 36,
+ 21,
+ 31,
+ 34,
+ 44,
+ 28,
+ 46,
+ 38,
+ 37,
+ 43,
+ 33,
+ 22,
+ 27,
+ 5,
+ 28,
+ 27,
+ 29,
+ 2,
+ 22,
+ 29,
+ 38,
+ 35,
+ 26,
+ 34,
+ 26,
+ 33,
+ 32,
+ 25,
+ 25,
+ 37,
+ 55,
+ 35,
+ 43,
+ 30,
+ 33,
+ 32,
+ 38,
+ 48,
+ 30,
+ 27,
+ 25,
+ 24,
+ 27,
+ 30,
+ 19,
+ 23,
+ 2,
+ 16,
+ 34,
+ 21,
+ 35,
+ 26,
+ 32,
+ 46,
+ 25,
+ 17,
+ 40,
+ 38,
+ 21,
+ 17,
+ 37,
+ 33,
+ 33,
+ 29,
+ 23,
+ 43,
+ 29,
+ 20,
+ 30,
+ 36,
+ 22,
+ 37,
+ 44,
+ 40,
+ 28,
+ 34,
+ 25,
+ 25,
+ 35,
+ 25,
+ 31,
+ 37,
+ 35,
+ 24,
+ 29,
+ 29,
+ 28,
+ 30,
+ 47,
+ 31,
+ 27,
+ 17,
+ 2,
+ 2,
+ 1,
+ 2,
+ 9,
+ 2,
+ 27,
+ 20,
+ 19,
+ 26,
+ 37,
+ 30,
+ 16,
+ 32,
+ 25,
+ 29,
+ 40,
+ 19,
+ 19,
+ 2,
+ 37,
+ 2,
+ 23,
+ 21,
+ 28,
+ 29,
+ 24,
+ 35,
+ 32,
+ 29,
+ 17,
+ 32,
+ 19,
+ 28,
+ 33,
+ 32,
+ 21,
+ 38,
+ 45,
+ 39,
+ 26,
+ 28,
+ 24,
+ 40,
+ 38,
+ 22,
+ 32,
+ 40,
+ 27,
+ 32,
+ 48,
+ 22,
+ 2,
+ 29,
+ 40,
+ 36,
+ 20,
+ 35,
+ 35,
+ 32,
+ 28,
+ 24,
+ 20,
+ 33,
+ 38,
+ 26,
+ 35,
+ 42,
+ 32,
+ 2,
+ 2,
+ 6,
+ 1,
+ 6,
+ 2,
+ 1,
+ 2,
+ 14,
+ 26,
+ 2,
+ 6,
+ 11,
+ 15,
+ 2,
+ 11,
+ 17,
+ 16,
+ 31,
+ 21,
+ 37,
+ 22,
+ 25,
+ 29,
+ 21,
+ 2,
+ 32,
+ 26,
+ 2,
+ 36,
+ 35,
+ 2,
+ 31,
+ 46,
+ 2,
+ 30,
+ 24,
+ 23,
+ 33,
+ 18,
+ 44,
+ 32,
+ 24,
+ 37,
+ 27,
+ 32,
+ 21,
+ 30,
+ 21,
+ 25,
+ 30,
+ 2,
+ 20,
+ 1,
+ 27,
+ 36,
+ 22,
+ 21,
+ 24,
+ 43,
+ 33,
+ 2,
+ 28,
+ 2,
+ 42,
+ 26,
+ 31,
+ 34,
+ 98,
+ 35,
+ 31,
+ 41,
+ 33,
+ 32,
+ 34,
+ 37,
+ 26,
+ 22,
+ 19,
+ 38,
+ 31,
+ 36,
+ 32,
+ 28,
+ 19,
+ 30,
+ 31,
+ 27,
+ 39,
+ 22,
+ 26,
+ 27,
+ 24,
+ 24,
+ 9,
+ 2,
+ 16,
+ 9,
+ 2,
+ 2,
+ 16,
+ 16,
+ 19,
+ 19,
+ 2,
+ 30,
+ 25,
+ 26,
+ 15,
+ 16,
+ 26,
+ 15,
+ 34,
+ 2,
+ 26,
+ 39,
+ 24,
+ 17,
+ 21,
+ 20,
+ 21,
+ 28,
+ 22,
+ 28,
+ 25,
+ 23,
+ 3,
+ 31,
+ 35,
+ 23,
+ 36,
+ 30,
+ 34,
+ 28,
+ 25,
+ 33,
+ 34,
+ 35,
+ 25,
+ 34,
+ 27,
+ 22,
+ 35,
+ 26,
+ 46,
+ 23,
+ 26,
+ 25,
+ 27,
+ 24,
+ 34,
+ 40,
+ 39,
+ 29,
+ 32,
+ 22,
+ 35,
+ 35,
+ 21,
+ 33,
+ 39,
+ 32,
+ 25,
+ 30,
+ 28,
+ 30,
+ 41,
+ 29,
+ 45,
+ 33,
+ 34,
+ 31,
+ 32,
+ 24,
+ 33,
+ 27,
+ 28,
+ 38,
+ 43,
+ 34,
+ 19,
+ 40,
+ 34,
+ 43,
+ 38,
+ 23,
+ 40,
+ 2,
+ 2,
+ 2,
+ 2,
+ 2,
+ 2,
+ 2,
+ 2,
+ 2,
+ 17,
+ 1,
+ 17,
+ 9,
+ 20,
+ 3,
+ 2,
+ 2,
+ 19,
+ 2,
+ 2,
+ 2,
+ 26,
+ 16,
+ 18,
+ 25,
+ 24,
+ 20,
+ 2,
+ 20,
+ 21,
+ 2,
+ 24,
+ 33,
+ 2,
+ 27,
+ 2,
+ 32,
+ 35,
+ 34,
+ 36,
+ 34,
+ 2,
+ 30,
+ 23,
+ 20,
+ 2,
+ 21,
+ 26,
+ 31,
+ 5,
+ 17,
+ 2,
+ 30,
+ 12,
+ 33,
+ 25,
+ 2,
+ 22,
+ 35,
+ 21,
+ 30,
+ 16,
+ 23,
+ 22,
+ 27,
+ 30,
+ 1,
+ 33,
+ 33,
+ 25,
+ 24,
+ 32,
+ 2,
+ 26,
+ 2,
+ 24,
+ 39,
+ 29,
+ 31,
+ 58,
+ 26,
+ 36,
+ 42,
+ 26,
+ 44,
+ 25,
+ 34,
+ 33,
+ 19,
+ 27,
+ 28,
+ 28,
+ 24,
+ 28,
+ 26,
+ 25,
+ 27,
+ 27,
+ 28,
+ 28,
+ 2,
+ 29,
+ 41,
+ 41,
+ 31,
+ 32,
+ 31,
+ 29,
+ 35,
+ 28,
+ 25,
+ 24,
+ 40,
+ 42,
+ 24,
+ 31,
+ 38,
+ 33,
+ 29,
+ 30,
+ 25,
+ 34,
+ 30,
+ 29,
+ 27,
+ 32,
+ 25,
+ 31,
+ 36,
+ 2,
+ 2,
+ 21,
+ 27,
+ 41,
+ 35,
+ 28,
+ 23,
+ 2,
+ 28,
+ 25,
+ 38,
+ 34,
+ 23,
+ 1,
+ 2,
+ 2,
+ 2,
+ 2,
+ 2,
+ 2,
+ 2,
+ 2,
+ 2,
+ 2,
+ 2,
+ 1,
+ 2,
+ 10,
+ 13,
+ 2,
+ 14,
+ 2,
+ 2,
+ 2,
+ 12,
+ 2,
+ 2,
+ 2,
+ 2,
+ 2,
+ 2,
+ 21,
+ 10,
+ 26,
+ 18,
+ 20,
+ 18,
+ 13,
+ 24,
+ 1,
+ 2,
+ 2,
+ 16,
+ 33,
+ 22,
+ 2,
+ 43,
+ 37,
+ 20,
+ 17,
+ 32,
+ 29,
+ 25,
+ 32,
+ 31,
+ 2,
+ 27,
+ 30,
+ 14,
+ 32,
+ 27,
+ 36,
+ 27,
+ 24,
+ 21,
+ 24,
+ 21,
+ 25,
+ 40,
+ 21,
+ 32,
+ 2,
+ 32,
+ 26,
+ 22,
+ 2,
+ 18,
+ 28,
+ 24,
+ 20,
+ 30,
+ 24,
+ 19,
+ 25,
+ 17,
+ 8,
+ 20,
+ 17,
+ 25,
+ 27,
+ 31,
+ 24,
+ 27,
+ 39,
+ 29,
+ 24,
+ 2,
+ 23,
+ 28,
+ 29,
+ 28,
+ 23,
+ 31,
+ 25,
+ 16,
+ 25,
+ 27,
+ 2,
+ 22,
+ 2,
+ 1,
+ 1,
+ 29,
+ 34,
+ 25,
+ 30,
+ 25,
+ 2,
+ 30,
+ 38,
+ 20,
+ 24,
+ 36,
+ 1,
+ 2,
+ 2,
+ 22,
+ 47,
+ 28,
+ 24,
+ 17,
+ 32,
+ 28,
+ 50,
+ 31,
+ 36,
+ 2,
+ 36,
+ 27,
+ 31,
+ 30,
+ 36,
+ 39,
+ 27,
+ 26,
+ 24,
+ 26,
+ 36,
+ 34,
+ 23,
+ 25,
+ 29,
+ 26,
+ 34,
+ 34,
+ 18,
+ 35,
+ 19,
+ 21,
+ 40,
+ 31,
+ 32,
+ 40,
+ 29,
+ 26,
+ 31,
+ 39,
+ 18,
+ 28,
+ 2,
+ 32,
+ 46,
+ 32,
+ 28,
+ 1,
+ 1,
+ 2,
+ 2,
+ 2,
+ 2,
+ 2,
+ 2,
+ 5,
+ 2,
+ 5,
+ 2,
+ 2,
+ 2,
+ 2,
+ 2,
+ 2,
+ 5,
+ 10,
+ 2,
+ 12,
+ 8,
+ 2,
+ 2,
+ 2,
+ 11,
+ 2,
+ 20,
+ 2,
+ 9,
+ 16,
+ 9,
+ 14,
+ 13,
+ 2,
+ 15,
+ 15,
+ 3,
+ 18,
+ 11,
+ 2,
+ 1,
+ 2,
+ 15,
+ 2,
+ 2,
+ 2,
+ 2,
+ 2,
+ 25,
+ 16,
+ 16,
+ 17,
+ 24,
+ 10,
+ 19,
+ 22,
+ 23,
+ 2,
+ 2,
+ 2,
+ 19,
+ 2,
+ 13,
+ 29,
+ 33,
+ 24,
+ 22,
+ 23,
+ 22,
+ 2,
+ 15,
+ 13,
+ 2,
+ 43,
+ 2,
+ 24,
+ 3,
+ 26,
+ 20,
+ 22,
+ 2,
+ 24,
+ 29,
+ 14,
+ 22,
+ 2,
+ 12,
+ 36,
+ 36,
+ 26,
+ 33,
+ 23,
+ 21,
+ 36,
+ 28,
+ 26,
+ 43,
+ 24,
+ 2,
+ 19,
+ 20,
+ 31,
+ 23,
+ 29,
+ 28,
+ 27,
+ 16,
+ 26,
+ 19,
+ 41,
+ 38,
+ 19,
+ 2,
+ 27,
+ 18,
+ 2,
+ 16,
+ 22,
+ 19,
+ 22,
+ 21,
+ 2,
+ 7,
+ 26,
+ 23,
+ 34,
+ 2,
+ 40,
+ 26,
+ 30,
+ 23,
+ 35,
+ 41,
+ 21,
+ 32,
+ 23,
+ 22,
+ 26,
+ 32,
+ 21,
+ 2,
+ 27,
+ 26,
+ 23,
+ 22,
+ 42,
+ 40,
+ 2,
+ 31,
+ 22,
+ 18,
+ 49,
+ 20,
+ 32,
+ 24,
+ 23,
+ 45,
+ 34,
+ 1,
+ 33,
+ 24,
+ 29,
+ 25,
+ 40,
+ 23,
+ 2,
+ 20,
+ 30,
+ 31,
+ 24,
+ 9,
+ 32,
+ 2,
+ 32,
+ 19,
+ 29,
+ 28,
+ 2,
+ 31,
+ 44,
+ 32,
+ 2,
+ 28,
+ 27,
+ 19,
+ 48,
+ 33,
+ 19,
+ 27,
+ 1,
+ 40,
+ 26,
+ 26,
+ 1,
+ 2,
+ 2,
+ 28,
+ 31,
+ 32,
+ 23,
+ 31,
+ 2,
+ 27,
+ 2,
+ 17,
+ 7,
+ 30,
+ 2,
+ 17,
+ 16,
+ 15,
+ 2,
+ 20,
+ 2,
+ 35,
+ 2,
+ 31,
+ 31,
+ 34,
+ 40,
+ 41,
+ 33,
+ 21,
+ 1,
+ 1,
+ 28,
+ 15,
+ 2,
+ 36,
+ 2,
+ 31,
+ 10,
+ 29,
+ 2,
+ 2,
+ 23,
+ 17,
+ 2,
+ 2,
+ 32,
+ 19,
+ 41,
+ 38,
+ 24,
+ 23,
+ 19,
+ 30,
+ 12,
+ 24,
+ 16,
+ 2,
+ 31,
+ 31,
+ 2,
+ 2,
+ 40,
+ 1,
+ 19,
+ 26,
+ 2,
+ 18,
+ 23,
+ 32,
+ 38,
+ 40,
+ 17,
+ 26,
+ 14,
+ 16,
+ 31,
+ 2,
+ 2,
+ 30,
+ ...]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#total_db_4 = pd.merge(total_db_3, fifa_18[[&#39;ID&#39;]], how = &#39;outer&#39;, left_on = &#39;player_fifa_api_id&#39;, right_on = &#39;ID&#39;)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Assumptions">Assumptions<a class="anchor-link" href="#Assumptions">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[325]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">fifa_19</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">fifa_18</span><span class="o">.</span><span class="n">columns</span><span class="p">)]</span>
+<span class="c1">#print(&#39;59 common rows&#39;)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[325]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[&#39;ID&#39;,
+ &#39;Name&#39;,
+ &#39;Age&#39;,
+ &#39;Photo&#39;,
+ &#39;Nationality&#39;,
+ &#39;Overall&#39;,
+ &#39;Potential&#39;,
+ &#39;Special&#39;,
+ &#39;LS&#39;,
+ &#39;ST&#39;,
+ &#39;RS&#39;,
+ &#39;LW&#39;,
+ &#39;LF&#39;,
+ &#39;CF&#39;,
+ &#39;RF&#39;,
+ &#39;RW&#39;,
+ &#39;LAM&#39;,
+ &#39;CAM&#39;,
+ &#39;RAM&#39;,
+ &#39;LM&#39;,
+ &#39;LCM&#39;,
+ &#39;CM&#39;,
+ &#39;RCM&#39;,
+ &#39;RM&#39;,
+ &#39;LWB&#39;,
+ &#39;LDM&#39;,
+ &#39;CDM&#39;,
+ &#39;RDM&#39;,
+ &#39;RWB&#39;,
+ &#39;LB&#39;,
+ &#39;LCB&#39;,
+ &#39;CB&#39;,
+ &#39;RCB&#39;,
+ &#39;RB&#39;,
+ &#39;Crossing&#39;,
+ &#39;Finishing&#39;,
+ &#39;Volleys&#39;,
+ &#39;Dribbling&#39;,
+ &#39;Curve&#39;,
+ &#39;Acceleration&#39;,
+ &#39;Agility&#39;,
+ &#39;Reactions&#39;,
+ &#39;Balance&#39;,
+ &#39;Jumping&#39;,
+ &#39;Stamina&#39;,
+ &#39;Strength&#39;,
+ &#39;Aggression&#39;,
+ &#39;Interceptions&#39;,
+ &#39;Positioning&#39;,
+ &#39;Vision&#39;,
+ &#39;Penalties&#39;,
+ &#39;Composure&#39;,
+ &#39;Marking&#39;]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[47]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fifa_19</span><span class="p">[[</span><span class="s2">&quot;ID&quot;</span><span class="p">,</span> <span class="s2">&quot;Name&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[47]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ID</th>
+      <th>Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>158023</td>
+      <td>L. Messi</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>20801</td>
+      <td>Cristiano Ronaldo</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>190871</td>
+      <td>Neymar Jr</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>193080</td>
+      <td>De Gea</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>192985</td>
+      <td>K. De Bruyne</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[48]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fifa_18</span><span class="p">[[</span><span class="s2">&quot;ID&quot;</span><span class="p">,</span> <span class="s2">&quot;Name&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[48]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ID</th>
+      <th>Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>20801</td>
+      <td>Cristiano Ronaldo</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>158023</td>
+      <td>L. Messi</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>190871</td>
+      <td>Neymar</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>176580</td>
+      <td>L. Suárez</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>167495</td>
+      <td>M. Neuer</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[346]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">fifa_19</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">fifa_18</span><span class="o">.</span><span class="n">columns</span><span class="p">)]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[346]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[&#39;Preferred Foot&#39;,
+ &#39;International Reputation&#39;,
+ &#39;Weak Foot&#39;,
+ &#39;Skill Moves&#39;,
+ &#39;Work Rate&#39;,
+ &#39;Body Type&#39;,
+ &#39;Position&#39;,
+ &#39;Height&#39;,
+ &#39;Weight&#39;,
+ &#39;FKAccuracy&#39;,
+ &#39;BallControl&#39;,
+ &#39;GKDiving&#39;,
+ &#39;GKHandling&#39;,
+ &#39;GKKicking&#39;,
+ &#39;GKPositioning&#39;,
+ &#39;GKReflexes&#39;]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[35]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fifa_18</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[35]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Unnamed: 0</th>
+      <th>Name</th>
+      <th>Age</th>
+      <th>Photo</th>
+      <th>Nationality</th>
+      <th>Flag</th>
+      <th>Overall</th>
+      <th>Potential</th>
+      <th>Club</th>
+      <th>Club Logo</th>
+      <th>...</th>
+      <th>RB</th>
+      <th>RCB</th>
+      <th>RCM</th>
+      <th>RDM</th>
+      <th>RF</th>
+      <th>RM</th>
+      <th>RS</th>
+      <th>RW</th>
+      <th>RWB</th>
+      <th>ST</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>Cristiano Ronaldo</td>
+      <td>32</td>
+      <td>https://cdn.sofifa.org/48/18/players/20801.png</td>
+      <td>Portugal</td>
+      <td>https://cdn.sofifa.org/flags/38.png</td>
+      <td>94</td>
+      <td>94</td>
+      <td>Real Madrid CF</td>
+      <td>https://cdn.sofifa.org/24/18/teams/243.png</td>
+      <td>...</td>
+      <td>61.0</td>
+      <td>53.0</td>
+      <td>82.0</td>
+      <td>62.0</td>
+      <td>91.0</td>
+      <td>89.0</td>
+      <td>92.0</td>
+      <td>91.0</td>
+      <td>66.0</td>
+      <td>92.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>L. Messi</td>
+      <td>30</td>
+      <td>https://cdn.sofifa.org/48/18/players/158023.png</td>
+      <td>Argentina</td>
+      <td>https://cdn.sofifa.org/flags/52.png</td>
+      <td>93</td>
+      <td>93</td>
+      <td>FC Barcelona</td>
+      <td>https://cdn.sofifa.org/24/18/teams/241.png</td>
+      <td>...</td>
+      <td>57.0</td>
+      <td>45.0</td>
+      <td>84.0</td>
+      <td>59.0</td>
+      <td>92.0</td>
+      <td>90.0</td>
+      <td>88.0</td>
+      <td>91.0</td>
+      <td>62.0</td>
+      <td>88.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>Neymar</td>
+      <td>25</td>
+      <td>https://cdn.sofifa.org/48/18/players/190871.png</td>
+      <td>Brazil</td>
+      <td>https://cdn.sofifa.org/flags/54.png</td>
+      <td>92</td>
+      <td>94</td>
+      <td>Paris Saint-Germain</td>
+      <td>https://cdn.sofifa.org/24/18/teams/73.png</td>
+      <td>...</td>
+      <td>59.0</td>
+      <td>46.0</td>
+      <td>79.0</td>
+      <td>59.0</td>
+      <td>88.0</td>
+      <td>87.0</td>
+      <td>84.0</td>
+      <td>89.0</td>
+      <td>64.0</td>
+      <td>84.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>L. Suárez</td>
+      <td>30</td>
+      <td>https://cdn.sofifa.org/48/18/players/176580.png</td>
+      <td>Uruguay</td>
+      <td>https://cdn.sofifa.org/flags/60.png</td>
+      <td>92</td>
+      <td>92</td>
+      <td>FC Barcelona</td>
+      <td>https://cdn.sofifa.org/24/18/teams/241.png</td>
+      <td>...</td>
+      <td>64.0</td>
+      <td>58.0</td>
+      <td>80.0</td>
+      <td>65.0</td>
+      <td>88.0</td>
+      <td>85.0</td>
+      <td>88.0</td>
+      <td>87.0</td>
+      <td>68.0</td>
+      <td>88.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>M. Neuer</td>
+      <td>31</td>
+      <td>https://cdn.sofifa.org/48/18/players/167495.png</td>
+      <td>Germany</td>
+      <td>https://cdn.sofifa.org/flags/21.png</td>
+      <td>92</td>
+      <td>92</td>
+      <td>FC Bayern Munich</td>
+      <td>https://cdn.sofifa.org/24/18/teams/21.png</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 75 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[49]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">fifa_19</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[49]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>18207</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[50]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fifa_19</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[50]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Unnamed: 0</th>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Age</th>
+      <th>Photo</th>
+      <th>Nationality</th>
+      <th>Flag</th>
+      <th>Overall</th>
+      <th>Potential</th>
+      <th>Club</th>
+      <th>...</th>
+      <th>Composure</th>
+      <th>Marking</th>
+      <th>StandingTackle</th>
+      <th>SlidingTackle</th>
+      <th>GKDiving</th>
+      <th>GKHandling</th>
+      <th>GKKicking</th>
+      <th>GKPositioning</th>
+      <th>GKReflexes</th>
+      <th>Release Clause</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>158023</td>
+      <td>L. Messi</td>
+      <td>31</td>
+      <td>https://cdn.sofifa.org/players/4/19/158023.png</td>
+      <td>Argentina</td>
+      <td>https://cdn.sofifa.org/flags/52.png</td>
+      <td>94</td>
+      <td>94</td>
+      <td>FC Barcelona</td>
+      <td>...</td>
+      <td>96.0</td>
+      <td>33.0</td>
+      <td>28.0</td>
+      <td>26.0</td>
+      <td>6.0</td>
+      <td>11.0</td>
+      <td>15.0</td>
+      <td>14.0</td>
+      <td>8.0</td>
+      <td>€226.5M</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>20801</td>
+      <td>Cristiano Ronaldo</td>
+      <td>33</td>
+      <td>https://cdn.sofifa.org/players/4/19/20801.png</td>
+      <td>Portugal</td>
+      <td>https://cdn.sofifa.org/flags/38.png</td>
+      <td>94</td>
+      <td>94</td>
+      <td>Juventus</td>
+      <td>...</td>
+      <td>95.0</td>
+      <td>28.0</td>
+      <td>31.0</td>
+      <td>23.0</td>
+      <td>7.0</td>
+      <td>11.0</td>
+      <td>15.0</td>
+      <td>14.0</td>
+      <td>11.0</td>
+      <td>€127.1M</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>190871</td>
+      <td>Neymar Jr</td>
+      <td>26</td>
+      <td>https://cdn.sofifa.org/players/4/19/190871.png</td>
+      <td>Brazil</td>
+      <td>https://cdn.sofifa.org/flags/54.png</td>
+      <td>92</td>
+      <td>93</td>
+      <td>Paris Saint-Germain</td>
+      <td>...</td>
+      <td>94.0</td>
+      <td>27.0</td>
+      <td>24.0</td>
+      <td>33.0</td>
+      <td>9.0</td>
+      <td>9.0</td>
+      <td>15.0</td>
+      <td>15.0</td>
+      <td>11.0</td>
+      <td>€228.1M</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>193080</td>
+      <td>De Gea</td>
+      <td>27</td>
+      <td>https://cdn.sofifa.org/players/4/19/193080.png</td>
+      <td>Spain</td>
+      <td>https://cdn.sofifa.org/flags/45.png</td>
+      <td>91</td>
+      <td>93</td>
+      <td>Manchester United</td>
+      <td>...</td>
+      <td>68.0</td>
+      <td>15.0</td>
+      <td>21.0</td>
+      <td>13.0</td>
+      <td>90.0</td>
+      <td>85.0</td>
+      <td>87.0</td>
+      <td>88.0</td>
+      <td>94.0</td>
+      <td>€138.6M</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>192985</td>
+      <td>K. De Bruyne</td>
+      <td>27</td>
+      <td>https://cdn.sofifa.org/players/4/19/192985.png</td>
+      <td>Belgium</td>
+      <td>https://cdn.sofifa.org/flags/7.png</td>
+      <td>91</td>
+      <td>92</td>
+      <td>Manchester City</td>
+      <td>...</td>
+      <td>88.0</td>
+      <td>68.0</td>
+      <td>58.0</td>
+      <td>51.0</td>
+      <td>15.0</td>
+      <td>13.0</td>
+      <td>5.0</td>
+      <td>10.0</td>
+      <td>13.0</td>
+      <td>€196.4M</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 89 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
 </div>
  
 

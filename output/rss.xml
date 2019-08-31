@@ -1,19 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tony's Data Science Blog</title><link>https://s0yabean.github.io</link><description>Technical Blog | Data Science Portfolio | Career Learnings</description><atom:link href="https://s0yabean.github.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><copyright>Contents © 2019 &lt;a href="mailto:tonytongwa@gmail.com"&gt;Tony Tong Tsz Hin&lt;/a&gt; </copyright><lastBuildDate>Wed, 21 Aug 2019 15:51:19 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>GovTech X NUS Capstone - Open sourcing a PII tool</title><link>https://s0yabean.github.io/posts/govtech-x-nus-capstone-open-sourcing-a-pii-tool/</link><dc:creator>Tony Tong Tsz Hin</dc:creator><description>&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tony's Data Science Blog</title><link>https://s0yabean.github.io</link><description>Technical Blog | Data Science Portfolio | Career Learnings</description><atom:link href="https://s0yabean.github.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><copyright>Contents © 2019 &lt;a href="mailto:tonytongwa@gmail.com"&gt;Tony Tong Tsz Hin&lt;/a&gt; </copyright><lastBuildDate>Sat, 31 Aug 2019 13:01:09 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>GovTech X NUS Capstone - Open sourcing a PII tool</title><link>https://s0yabean.github.io/posts/govtech-x-nus-capstone-open-sourcing-a-pii-tool/</link><dc:creator>Tony Tong Tsz Hin</dc:creator><description>&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;Write your post here.&lt;/p&gt;
 
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;/div&gt;</description><guid>https://s0yabean.github.io/posts/govtech-x-nus-capstone-open-sourcing-a-pii-tool/</guid><pubDate>Wed, 21 Aug 2019 15:51:16 GMT</pubDate></item><item><title>Uncovering Soccer Player Traits Using Clustering Algorithms (FIFA 2018-2019 Data)</title><link>https://s0yabean.github.io/posts/uncovering-soccer-player-traits-using-clustering-algorithms-fifa-2018-2019-data/</link><dc:creator>Tony Tong Tsz Hin</dc:creator><description>&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;</description><guid>https://s0yabean.github.io/posts/govtech-x-nus-capstone-open-sourcing-a-pii-tool/</guid><pubDate>Wed, 21 Aug 2019 15:51:16 GMT</pubDate></item><item><title>Uncovering Soccer Player Traits Using Clustering Algorithms (FIFA 2018-2019 Data)</title><link>https://s0yabean.github.io/posts/uncovering-soccer-player-traits-using-clustering-algorithms-fifa-2018-2019-data/</link><dc:creator>Tony Tong Tsz Hin</dc:creator><description>&lt;div&gt;&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;p&gt;Write your post here.&lt;/p&gt;
-
+&lt;h2 id="Title:-Uncovering-Soccer-Personas-Using-Clustering-Algorithms"&gt;Title: Uncovering Soccer Personas Using Clustering Algorithms&lt;a class="anchor-link" href="https://s0yabean.github.io/posts/uncovering-soccer-player-traits-using-clustering-algorithms-fifa-2018-2019-data/#Title:-Uncovering-Soccer-Personas-Using-Clustering-Algorithms"&gt;¶&lt;/a&gt;&lt;/h2&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;/div&gt;</description><guid>https://s0yabean.github.io/posts/uncovering-soccer-player-traits-using-clustering-algorithms-fifa-2018-2019-data/</guid><pubDate>Wed, 21 Aug 2019 15:49:56 GMT</pubDate></item><item><title>Going Full-Stack - Building a gamified CRM web app</title><link>https://s0yabean.github.io/posts/going-full-stack-building-a-gamified-crm-web-app/</link><dc:creator>Tony Tong Tsz Hin</dc:creator><description>&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;h2 id="Introduction-(What-Is-Clustering?)"&gt;Introduction (What Is Clustering?)&lt;a class="anchor-link" href="https://s0yabean.github.io/posts/uncovering-soccer-player-traits-using-clustering-algorithms-fifa-2018-2019-data/#Introduction-(What-Is-Clustering?)"&gt;¶&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;In the realms of machine learning, a very common delineation is between:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;supervised learning &lt;/li&gt;
+&lt;li&gt;unsupervised learning&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The key difference is whether a target variable of interest is available. In other words, is there something for the training data to predict and compare with?&lt;/p&gt;
+&lt;p&gt;If not, it typically is an unsupervised learning problem, where we seek to unravel the "hidden" target variable using techniques that attempt to group similar data together.&lt;/p&gt;
+&lt;h5 id="During-past-data-science-work,-I-have-led-and-implemented-2-technical-projects-related-to-clustering-in-different-industries,-which-has-deepened-my-appreciation-for-this-problem-space."&gt;During past data science work, I have led and implemented 2 technical projects related to clustering in different industries, which has deepened my appreciation for this problem space.&lt;a class="anchor-link" href="https://s0yabean.github.io/posts/uncovering-soccer-player-traits-using-clustering-algorithms-fifa-2018-2019-data/#During-past-data-science-work,-I-have-led-and-implemented-2-technical-projects-related-to-clustering-in-different-industries,-which-has-deepened-my-appreciation-for-this-problem-space."&gt;¶&lt;/a&gt;&lt;/h5&gt;&lt;p&gt;Usually, businesses would like to cluster commercial data for various purposes, such as discovering customer profiles to create mental models of their customers.&lt;/p&gt;
+&lt;p&gt;The commercial work I did revolved around clustering consumers to rank them for targeted marketing campaigns and customer support, and the applications are plenty.&lt;/p&gt;
+&lt;p&gt;However I wanted to switch it up and doing something fun while transferring my tacit knowledge, so I decided to work on soccer.&lt;/p&gt;
+&lt;p&gt;I'm an avid soccer player - one of my biggest sporting achievements was winning the under 10 7-a-side National Championships in Singapore where I scored the winning goal.&lt;/p&gt;
+&lt;p&gt;I never really reached that peak again even in my teens, but I've always grew strong domain expertise through futsal sessions and watching top European leagues - I supported Manchester United until Rooney left!&lt;/p&gt;
+&lt;h6 id="Hence,-I-wanted-to-take-this-opportunity-to-cluster-a-bunch-of-player-data-and-build-a-soccer-player-recommender-using-clustering-techniques."&gt;Hence, I wanted to take this opportunity to cluster a bunch of player data and build a soccer player recommender using clustering techniques.&lt;a class="anchor-link" href="https://s0yabean.github.io/posts/uncovering-soccer-player-traits-using-clustering-algorithms-fifa-2018-2019-data/#Hence,-I-wanted-to-take-this-opportunity-to-cluster-a-bunch-of-player-data-and-build-a-soccer-player-recommender-using-clustering-techniques."&gt;¶&lt;/a&gt;&lt;/h6&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;&lt;a href="https://s0yabean.github.io/posts/uncovering-soccer-player-traits-using-clustering-algorithms-fifa-2018-2019-data/"&gt;Read more…&lt;/a&gt; (18 min remaining to read)&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;</description><guid>https://s0yabean.github.io/posts/uncovering-soccer-player-traits-using-clustering-algorithms-fifa-2018-2019-data/</guid><pubDate>Wed, 21 Aug 2019 15:49:56 GMT</pubDate></item><item><title>Going Full-Stack - Building a gamified CRM web app</title><link>https://s0yabean.github.io/posts/going-full-stack-building-a-gamified-crm-web-app/</link><dc:creator>Tony Tong Tsz Hin</dc:creator><description>&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
 &lt;/div&gt;&lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
 &lt;p&gt;Write your post here.&lt;/p&gt;
